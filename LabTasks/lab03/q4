@@ -1,0 +1,182 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int val) {
+        data = val;
+        next = nullptr;
+    }
+};
+
+class LinkedList {
+public:
+    Node* head;
+    LinkedList() : head(nullptr) {}
+
+    // Insert at end
+    void insertAtEnd(int val) {
+        Node* newNode = new Node(val);
+        if (head == nullptr) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != nullptr) temp = temp->next;
+        temp->next = newNode;
+    }
+
+    // Display list
+    void display() {
+        Node* temp = head;
+        while (temp != nullptr) {
+            cout << temp->data << " -> ";
+            temp = temp->next;
+        }
+        cout << "NULL\n";
+    }
+
+    // 1. Sort list in ascending order (Bubble Sort style)
+    void sortList() {
+        if (!head) return;
+        bool swapped;
+        do {
+            swapped = false;
+            Node* temp = head;
+            while (temp->next != nullptr) {
+                if (temp->data > temp->next->data) {
+                    swap(temp->data, temp->next->data);
+                    swapped = true;
+                }
+                temp = temp->next;
+            }
+        } while (swapped);
+    }
+
+    // 2. Concatenate another list
+    void concatenate(LinkedList& other) {
+        if (head == nullptr) {
+            head = other.head;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != nullptr) temp = temp->next;
+        temp->next = other.head;
+    }
+
+    // 3. Find middle element
+    void findMiddle() {
+        if (!head) {
+            cout << "List is empty\n";
+            return;
+        }
+        Node* slow = head;
+        Node* fast = head;
+        while (fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        cout << "Middle element is: " << slow->data << endl;
+    }
+
+    // 4. Remove duplicates (for unsorted list)
+    void removeDuplicates() {
+        Node* current = head;
+        while (current != nullptr) {
+            Node* runner = current;
+            while (runner->next != nullptr) {
+                if (runner->next->data == current->data) {
+                    Node* dup = runner->next;
+                    runner->next = runner->next->next;
+                    delete dup;
+                } else {
+                    runner = runner->next;
+                }
+            }
+            current = current->next;
+        }
+    }
+
+    // 5. Merge two sorted lists
+    static LinkedList mergeSorted(LinkedList& l1, LinkedList& l2) {
+        LinkedList result;
+        Node* dummy = new Node(0);
+        Node* tail = dummy;
+
+        Node* a = l1.head;
+        Node* b = l2.head;
+
+        while (a != nullptr && b != nullptr) {
+            if (a->data <= b->data) {
+                tail->next = a;
+                a = a->next;
+            } else {
+                tail->next = b;
+                b = b->next;
+            }
+            tail = tail->next;
+        }
+        if (a != nullptr) tail->next = a;
+        if (b != nullptr) tail->next = b;
+
+        result.head = dummy->next;
+        delete dummy;
+        return result;
+    }
+};
+
+int main() {
+    LinkedList l1;
+    l1.insertAtEnd(30);
+    l1.insertAtEnd(10);
+    l1.insertAtEnd(50);
+    l1.insertAtEnd(20);
+
+    cout << "Original List: ";
+    l1.display();
+
+    // Sort
+    l1.sortList();
+    cout << "Sorted List: ";
+    l1.display();
+
+    // Find Middle
+    l1.findMiddle();
+
+    // Add duplicates
+    l1.insertAtEnd(20);
+    l1.insertAtEnd(30);
+    cout << "With Duplicates: ";
+    l1.display();
+
+    // Remove duplicates
+    l1.removeDuplicates();
+    cout << "After Removing Duplicates: ";
+    l1.display();
+
+    // Concatenate
+    LinkedList l2;
+    l2.insertAtEnd(5);
+    l2.insertAtEnd(15);
+    l1.concatenate(l2);
+    cout << "After Concatenation: ";
+    l1.display();
+
+    // Merge two sorted lists
+    LinkedList a, b;
+    a.insertAtEnd(1);
+    a.insertAtEnd(3);
+    a.insertAtEnd(5);
+
+    b.insertAtEnd(2);
+    b.insertAtEnd(4);
+    b.insertAtEnd(6);
+
+    LinkedList merged = LinkedList::mergeSorted(a, b);
+    cout << "Merged Sorted Lists: ";
+    merged.display();
+
+    return 0;
+}
