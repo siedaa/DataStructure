@@ -1,0 +1,106 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int compartmentNo;
+    Node* next;
+    Node* prev;
+
+    Node(int val) {
+        compartmentNo = val;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+class DoublyLinkedList {
+private:
+    Node* head;
+
+public:
+    DoublyLinkedList() : head(nullptr) {}
+
+    // Add a new compartment at the end
+    void addCompartment(int val) {
+        Node* newNode = new Node(val);
+        if (head == nullptr) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+        newNode->prev = temp;
+    }
+
+    // Remove the first compartment
+    void removeFirst() {
+        if (head == nullptr) {
+            cout << "No compartments to remove!\n";
+            return;
+        }
+        Node* temp = head;
+        head = head->next;
+        if (head != nullptr) {
+            head->prev = nullptr;
+        }
+        delete temp;
+        cout << "First compartment removed.\n";
+    }
+
+    // Search for a compartment number
+    void searchCompartment(int val) {
+        Node* temp = head;
+        int pos = 1;
+        while (temp != nullptr) {
+            if (temp->compartmentNo == val) {
+                cout << "Compartment " << val << " found at position " << pos << ".\n";
+                return;
+            }
+            temp = temp->next;
+            pos++;
+        }
+        cout << "Compartment " << val << " not found.\n";
+    }
+
+    // Display compartments from front to end
+    void display() {
+        if (head == nullptr) {
+            cout << "No compartments in the train.\n";
+            return;
+        }
+        Node* temp = head;
+        cout << "Compartments: ";
+        while (temp != nullptr) {
+            cout << temp->compartmentNo << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+// Driver code
+int main() {
+    DoublyLinkedList train;
+
+    // Adding compartments
+    train.addCompartment(101);
+    train.addCompartment(102);
+    train.addCompartment(103);
+    train.addCompartment(104);
+
+    train.display();
+
+    // Remove first compartment
+    train.removeFirst();
+    train.display();
+
+    // Search compartments
+    train.searchCompartment(103);
+    train.searchCompartment(110);
+
+    return 0;
+}
