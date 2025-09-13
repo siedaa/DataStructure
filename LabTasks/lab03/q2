@@ -1,0 +1,128 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node {
+public:
+    string title;
+    Node *next;
+
+    Node(string val = "") {
+        title = val;
+        next = nullptr;
+    }
+};
+
+class LibraryCatalog {
+private:
+    Node *head;
+
+public:
+    LibraryCatalog() {
+        head = nullptr;
+    }
+
+    // 1. Add a Book to the Tail
+    void addBookTail(string book) {
+        Node *newNode = new Node(book);
+        if (head == nullptr) {
+            head = newNode;
+            cout << "Book \"" << book << "\" added as the first book.\n";
+            return;
+        }
+        Node *temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+        cout << "Book \"" << book << "\" added to the catalog.\n";
+    }
+
+    // 2. Delete a Book from the Front
+    void deleteBookFront() {
+        if (head == nullptr) {
+            cout << "Catalog is empty. No book to delete.\n";
+            return;
+        }
+        Node *temp = head;
+        cout << "Book \"" << head->title << "\" deleted from the front.\n";
+        head = head->next;
+        delete temp;
+    }
+
+    // 3. Search for a Book by Title
+    void searchByTitle(string book) {
+        Node *temp = head;
+        int pos = 1;
+        while (temp != nullptr) {
+            if (temp->title == book) {
+                cout << "Book \"" << book << "\" found at position " << pos << ".\n";
+                return;
+            }
+            temp = temp->next;
+            pos++;
+        }
+        cout << "Book \"" << book << "\" not found in the catalog.\n";
+    }
+
+    // 4. Search for a Book by Position
+    void searchByPosition(int pos) {
+        if (pos <= 0) {
+            cout << "Invalid position!\n";
+            return;
+        }
+        Node *temp = head;
+        int current = 1;
+        while (temp != nullptr && current < pos) {
+            temp = temp->next;
+            current++;
+        }
+        if (temp == nullptr) {
+            cout << "No book found at position " << pos << ".\n";
+        } else {
+            cout << "Book at position " << pos << " is \"" << temp->title << "\".\n";
+        }
+    }
+
+    // 5. Display Entire Catalog
+    void displayCatalog() {
+        if (head == nullptr) {
+            cout << "The catalog is empty.\n";
+            return;
+        }
+        cout << "Library Catalog: ";
+        Node *temp = head;
+        while (temp != nullptr) {
+            cout << temp->title;
+            if (temp->next != nullptr) cout << " -> ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    LibraryCatalog catalog;
+
+    // Adding books
+    catalog.addBookTail("Data Structures");
+    catalog.addBookTail("Operating Systems");
+    catalog.addBookTail("Computer Networks");
+    catalog.addBookTail("Database Systems");
+
+    catalog.displayCatalog();
+
+    // Delete from front
+    catalog.deleteBookFront();
+    catalog.displayCatalog();
+
+    // Search by title
+    catalog.searchByTitle("Operating Systems");
+    catalog.searchByTitle("Cyber Security");
+
+    // Search by position
+    catalog.searchByPosition(2);
+    catalog.searchByPosition(5);
+
+    return 0;
+}
