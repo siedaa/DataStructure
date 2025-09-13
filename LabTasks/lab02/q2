@@ -1,55 +1,139 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-class array  {
-   int rows;
-   int cols;
-   int **arr;
-   public:
-   array (int r , int c) {
-   int ** arr = new int *[rows];
-    for (int i=0;i<rows;i++) {
-        arr[i] = new int [cols];
-    }
-   }
+class array {
+    int rows;
+    int cols;
+    int **arr;
 
-   void inputData() {
-    cout<<"enter elements (" <<rows <<"x" <<cols << " )" <<endl;
-    for (int i=0;i<rows;i++){
-        for (int j=0;j<cols;j++){
-            cin>> arr[i][j];
+public:
+    array(int r, int c) {
+        rows = r;
+        cols = c;
+        arr = new int *[rows];
+        for (int i = 0; i < rows; i++) {
+            arr[i] = new int[cols];
         }
     }
-}
-void displaying () {
 
-    cout <<"displpaying aray" <endl;
-    for (int i=0;i<rows;i++){
-        for (int j=0;j<cols;j++){
-            cout<< arr[i][j];
+    void inputData() {
+        cout << "Enter elements (" << rows << "x" << cols << "):\n";
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                cin >> arr[i][j];
+            }
         }
-        cout<<endl;
+    }
+
+   void resize(int newRows, int newCols, int fillValue = 0) {
+    // Step 1:i will create new 2D array
+    int **newArr = new int*[newRows];
+    for (int i = 0; i < newRows; i++) {
+        newArr[i] = new int[newCols];
+    }
+
+    // Step 2: now copy old values or fill with fillValue
+    for (int i = 0; i < newRows; i++) {
+        for (int j = 0; j < newCols; j++) {
+            if (i < rows && j < cols) {
+                newArr[i][j] = arr[i][j]; // copy old value
+            } else {
+                newArr[i][j] = fillValue; // fill new cells
+            }
+        }
+        cout<<"resizing done"<<endl;
+    }
+
+    // Step 3: now we will delete old array
+    for (int i = 0; i < rows; i++) {
+        delete[] arr[i];
+    }
+    delete[] arr;
+
+    // Step 4: update to new array
+    arr = newArr;
+    rows = newRows;
+    cols = newCols;
+}
+
+    void displaying() {
+        cout << "Displaying array:\n";
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                cout << arr[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    void transpose() {
+    // Step 1: make a new array with swapped dimensions
+    int **newArr = new int*[cols];
+    for (int i = 0; i < cols; i++) {
+        newArr[i] = new int[rows];
+    }
+    for (int i = 0; i < rows; i++) {  // Step 2: fill new array with transposed values
+        for (int j = 0; j < cols; j++) {
+            newArr[j][i] = arr[i][j]; // swap row & col
+        }
+    }
+    for (int i = 0; i < rows; i++) {   // Step 3: delete old array
+        delete[] arr[i];
+    }
+    delete[] arr;
+
+    // Step 4: update rows, cols and pointer
+    int temp = rows;
+    rows = cols;
+    cols = temp;
+    arr = newArr;
+
+    cout<<"array transposed successfully"<<endl;
+}
+
+
+    ~array() {
+        for (int i = 0; i < rows; i++) {
+            delete[] arr[i];
+        }
+        delete[] arr;
+    }
+    void displayModified() {
+    cout << "Displaying array with +2 on odd indices:\n";
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            int index = i * cols + j;  // linear index
+            int value = arr[i][j];
+
+            if (index % 2 == 1) {
+                value += 2;  // add 2 if index is odd
+            }
+
+            cout << value << " ";
+        }
+        cout << endl;
     }
 }
 
-// void resizeArray (int )
-
-~ array() {
-
-    for (int i=0;i<rows;i++) {
-        delete[]arr[i];
-    }
-    delete[]arr;
-}
 };
 
-    int main () {
-        int r , c;
-    cout<<"enter rows of the matrix"<<endl;
-    cin>>r;
-    cout<<"enter cols of the matrix : "<<endl;
-    cin>>c;
+int main() {
+    int r, c;
+    cout << "Enter rows of the matrix: ";
+    cin >> r;
+    cout << "Enter cols of the matrix: ";
+    cin >> c;
 
+    array a1(r, c);
+    a1.inputData();
+    a1.displaying();
 
-    return 0;
+    a1.resize(4, 5, 0); // Resize to 4x5 and fill new cells with 0
+    a1.displaying();
+
+    a1.transpose(); // Transpose the array
+    a1.displaying();
+    a1.displayModified(); // Display with +2 on odd indices
+
+    return 0; 
 }
