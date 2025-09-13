@@ -1,0 +1,106 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    string song;
+    Node* next;
+
+    Node(string s) {
+        song = s;
+        next = nullptr;
+    }
+};
+
+class Playlist {
+private:
+    Node* tail;  // Keep track of the last song
+public:
+    Playlist() : tail(nullptr) {}
+
+    // Add song at the end of playlist
+    void addSong(string song) {
+        Node* newNode = new Node(song);
+        if (tail == nullptr) { 
+            tail = newNode;
+            tail->next = tail; // circular
+        } else {
+            newNode->next = tail->next; // head
+            tail->next = newNode;
+            tail = newNode; // move tail
+        }
+        cout << "Added: " << song << endl;
+    }
+
+    // Display all songs
+    void display() {
+        if (tail == nullptr) {
+            cout << "Playlist is empty." << endl;
+            return;
+        }
+        Node* temp = tail->next; // head
+        do {
+            cout << temp->song << " -> ";
+            temp = temp->next;
+        } while (temp != tail->next);
+        cout << "(back to start)" << endl;
+    }
+
+    // Delete first song
+    void deleteFirstSong() {
+        if (tail == nullptr) {
+            cout << "Playlist is empty. Nothing to delete." << endl;
+            return;
+        }
+        Node* head = tail->next;
+        if (head == tail) { // only one song
+            cout << "Deleted: " << head->song << endl;
+            delete head;
+            tail = nullptr;
+        } else {
+            cout << "Deleted: " << head->song << endl;
+            tail->next = head->next;
+            delete head;
+        }
+    }
+
+    // Search a song
+    void searchSong(string song) {
+        if (tail == nullptr) {
+            cout << "Playlist is empty." << endl;
+            return;
+        }
+        Node* temp = tail->next;
+        do {
+            if (temp->song == song) {
+                cout << "Song found: " << song << endl;
+                return;
+            }
+            temp = temp->next;
+        } while (temp != tail->next);
+        cout << "Song not found: " << song << endl;
+    }
+};
+
+int main() {
+    Playlist playlist;
+
+    playlist.addSong("Song1");
+    playlist.addSong("song2");
+    playlist.addSong("song3");
+    playlist.addSong("song4");
+
+    cout << "\nCurrent Playlist: " << endl;
+    playlist.display();
+
+    cout << "\nSearching for 'Believer':" << endl;
+    playlist.searchSong("Believer");
+
+    cout << "\nDeleting first song..." << endl;
+    playlist.deleteFirstSong();
+
+    cout << "\nUpdated Playlist: " << endl;
+    playlist.display();
+
+    return 0;
+}
