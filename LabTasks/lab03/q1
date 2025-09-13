@@ -1,0 +1,115 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node {
+public:
+    string data;
+    Node *next;
+
+    Node(string val = "") {
+        data = val;
+        next = nullptr;
+    }
+};
+
+class LinkedList {
+public:
+    Node *head;
+
+    LinkedList() {
+        head = nullptr;
+    }
+
+    // Insert at front
+    void insertAtHead(string book) {
+        Node *newNode = new Node(book);
+        newNode->next = head;
+        head = newNode;
+    }
+
+    // Insert at end
+    void insertAtEnd(string book) {
+        if (head == nullptr) {
+            head = new Node(book);
+            return;
+        }
+        Node *temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = new Node(book);
+    }
+
+    // Insert after a given book
+    void insertAfterValue(string target, string book) {
+        Node *temp = head;
+        while (temp != nullptr && temp->data != target) {
+            temp = temp->next;
+        }
+        if (temp == nullptr) {
+            cout << "Book \"" << target << "\" not found. Cannot insert \"" << book << "\".\n";
+            return;
+        }
+        Node *newNode = new Node(book);
+        newNode->next = temp->next;
+        temp->next = newNode;
+    }
+
+    // Search a book
+    bool search(string book) {
+        Node *temp = head;
+        while (temp != nullptr) {
+            if (temp->data == book) {
+                cout << "Book \"" << book << "\" found in the library.\n";
+                return true;
+            }
+            temp = temp->next;
+        }
+        cout << "Book \"" << book << "\" not found in the library.\n";
+        return false;
+    }
+
+    // Display all books
+    void display() {
+        cout << "Library books: ";
+        Node *temp = head;
+        while (temp != nullptr) {
+            cout << temp->data;
+            if (temp->next != nullptr) cout << " -> ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    LinkedList library;
+
+    // Initially given books
+    library.insertAtEnd("Data Structures");
+    library.insertAtEnd("Operating Systems");
+    library.insertAtEnd("Computer Networks");
+    library.insertAtEnd("Database Systems");
+
+    cout << "Initial library: \n";
+    library.display();
+
+    // Add "Artificial Intelligence" at front
+    library.insertAtHead("Artificial Intelligence");
+
+    // Add "Machine Learning" at end
+    library.insertAtEnd("Machine Learning");
+
+    // Insert "Cyber Security" after "Operating Systems"
+    library.insertAfterValue("Operating Systems", "Cyber Security");
+
+    // Search for "Database Systems"
+    library.search("Database Systems");
+
+    // Final display
+    cout << "\nFinal library: \n";
+    library.display();
+
+    return 0;
+}
