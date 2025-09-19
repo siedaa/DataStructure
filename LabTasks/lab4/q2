@@ -1,0 +1,95 @@
+#include<iostream>
+using namespace std;
+
+void bubblesort (int array[] , int size) {
+    cout<<"bubble sort"<<endl;
+   int count=0;
+    for (int i =0;i<size;i++) 
+ for (int j=0;j<size-1;j++) {
+    if (array[j] > array [j+1]) {
+        int temp = array[j];
+        array[j] = array[j+1];
+        array[j+1] = temp;
+count ++;
+    }
+ }
+ cout<<"array sorted : " <<count<<endl;  
+    }
+void insertionSort (int array[], int size) {
+    cout<<"insertion sort"<<endl;
+    for (int i=0;i<size;i++) {
+        int key= array[i];
+        int j = i-1;
+
+        while(j>=0 && array[j] >key) {
+            array[j+1] = array [j];
+            j--;
+        }
+array[j+1] = key;
+    }
+}
+
+void selectionSort(int array[], int n) {
+    cout << "Selection Sort" << endl;
+    for (int i = 0; i < n - 1; i++) {
+        int m = i;
+        for (int j = i + 1; j < n; j++) {
+            if (array[j] < array[m]) {
+                m = j;
+            }
+        }
+        int temp = array[i];
+        array[i] = array[m];
+        array[m] = temp;
+    }
+}
+
+
+void shellSort (int array[] , int n1) {
+    cout<<"shell sort" <<endl;
+    for (int gap = n1/2;gap>0;gap/=2) {
+        for (int j=gap;j<n1;j++){
+            int temp = array[j];
+            int res=j;
+
+            while(res >= gap && array[res-gap] > temp){
+                array[res]= array[res-gap];
+                res-= gap;
+            }
+            array[res] = temp;
+        }
+    }
+}
+
+    void printArray(int array[], int n) {
+        for (int i=0;i<n;i++) {
+            cout<<array[i] << " , ";
+        }
+    }
+int main () {
+    int array[20];
+for (int i=0;i<20;i++) {
+    array[i]= rand() % 101;
+}
+ printArray(array,20);
+ cout<<endl;
+ bubblesort (array, 20);
+ cout<<endl;
+ printArray(array,20);
+ cout<<endl;
+ insertionSort (array,  20);
+ cout<<endl;
+ printArray(array,20);
+ cout<<endl;
+ selectionSort (array,  20) ;
+ cout<<endl;
+ printArray(array,20);
+ cout<<endl;
+ shellSort (array , 20);
+ cout<<endl;
+ printArray(array,20);
+ cout<<endl;
+
+return 0;
+
+}
