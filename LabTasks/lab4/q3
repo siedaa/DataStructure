@@ -1,0 +1,35 @@
+#include<iostream >
+using namespace std;
+
+void shellSort (int array[] , int n1) {
+    for (int gap = n1/2;gap>0;gap/=2) {
+        for (int j=gap;j<n1;j++){
+            int temp = array[j];
+            int res=j;
+
+            while(res >= gap && array[res-gap] > temp){
+                array[res]= array[res-gap];
+                res-= gap;
+            }
+            array[res] = temp;
+        }
+    }
+}
+
+    void printArray(int array[], int n) {
+        for (int i=0;i<n;i++) {
+            cout<<array[i] << " , ";
+        }
+    }
+int main () {
+    int array[20];
+for (int i=0;i<20;i++) {
+    cout<<"input " <<i+1<<endl;
+    cin>> array[i];
+}
+shellSort (array , 20);
+printArray(array,20);
+
+return 0;
+
+}
