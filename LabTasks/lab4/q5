@@ -1,0 +1,66 @@
+#include <iostream>
+using namespace std;
+
+// Selection Sort function
+void selectionSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int m = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[m]) {
+                m = j;
+            }
+        }
+        // Swap
+        int temp = arr[i];
+        arr[i] = arr[m];
+        arr[m] = temp;
+    }
+}
+
+// Binary Search function
+int binarySearch(int arr[], int n, int x) {
+    int low = 0, high = n - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if (arr[mid] == x) return mid;   // Found
+        else if (arr[mid] < x) low = mid + 1; // Search right half
+        else high = mid - 1; // Search left half
+    }
+    return -1; // Not found
+}
+
+int main() {
+    int n;
+    cout << "Enter size of array: ";
+    cin >> n;
+
+    int arr[n];
+    cout << "Enter " << n << " elements: ";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    // Sort the array
+    selectionSort(arr, n);
+
+    cout << "Sorted Array: ";
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+    int x;
+    cout << "Enter value to search: ";
+    cin >> x;
+
+    // Perform Binary Search
+    int index = binarySearch(arr, n, x);
+
+    if (index != -1)
+        cout << "Element found at index " << index << endl;
+    else
+        cout << "Element not found in the array" << endl;
+
+    return 0;
+}
