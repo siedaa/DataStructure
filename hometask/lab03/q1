@@ -1,0 +1,103 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    string item;
+    int price;
+    Node* next;
+
+    Node(string i, int p) {
+        item = i;
+        price = p;
+        next = NULL;
+    }
+};
+
+class ShoppingCart {
+public:
+    Node* head;
+
+    ShoppingCart() {
+        head = NULL;
+    }
+
+    // Add item at front
+    void addFront(string name, int price) {
+        Node* newNode = new Node(name, price);
+        newNode->next = head;
+        head = newNode;
+    }
+
+    // Add item at end
+    void addEnd(string name, int price) {
+        Node* newNode = new Node(name, price);
+        if (head == NULL) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+
+    // Insert after a given item
+    void insertAfter(string afterItem, string name, int price) {
+        Node* temp = head;
+        while (temp != NULL && temp->item != afterItem) {
+            temp = temp->next;
+        }
+        if (temp == NULL) {
+            cout << "Item " << afterItem << " not found!" << endl;
+            return;
+        }
+        Node* newNode = new Node(name, price);
+        newNode->next = temp->next;
+        temp->next = newNode;
+    }
+
+    // Search for an item
+    void searchItem(string name) {
+        Node* temp = head;
+        while (temp != NULL) {
+            if (temp->item == name) {
+                cout << name << " exists in cart with price $" << temp->price << endl;
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << name << " not found in cart!" << endl;
+    }
+
+    // Display all items
+    void display() {
+        Node* temp = head;
+        cout << "\nShopping Cart Items:\n";
+        while (temp != NULL) {
+            cout << temp->item << " - $" << temp->price << endl;
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    ShoppingCart cart;
+
+    // Initially add items
+    cart.addEnd("Laptop", 1000);
+    cart.addEnd("Phone", 700);
+    cart.addEnd("Tablet", 400);
+    cart.addEnd("Headphones", 150);
+
+    // Perform operations
+    cart.addFront("Smartwatch", 200);          // Add at front
+    cart.addEnd("Keyboard", 80);              // Add at end
+    cart.insertAfter("Phone", "Monitor", 300); // Insert after Phone
+    cart.searchItem("Tablet");                // Search Tablet
+    cart.display();                           // Display final cart
+
+    return 0;
+}
