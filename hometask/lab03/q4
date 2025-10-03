@@ -1,0 +1,185 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Ticket {
+    int ticketID;
+    string customerName;
+    string rideName;
+    Ticket* next;
+};
+
+class CircularLinkedList {
+private:
+    Ticket* head;
+public:
+    CircularLinkedList() {
+        head = NULL;
+    }
+
+    // Issue Ticket at the End
+    void issueTicketEnd(int id, string name, string ride) {
+        Ticket* newTicket = new Ticket{id, name, ride, NULL};
+        if (!head) {
+            head = newTicket;
+            newTicket->next = head;
+        } else {
+            Ticket* temp = head;
+            while (temp->next != head) {
+                temp = temp->next;
+            }
+            temp->next = newTicket;
+            newTicket->next = head;
+        }
+    }
+
+    // Issue Priority Ticket at the Front
+    void issuePriorityTicket(int id, string name, string ride) {
+        Ticket* newTicket = new Ticket{id, name, ride, NULL};
+        if (!head) {
+            head = newTicket;
+            newTicket->next = head;
+        } else {
+            Ticket* temp = head;
+            while (temp->next != head) {
+                temp = temp->next;
+            }
+            temp->next = newTicket;
+            newTicket->next = head;
+            head = newTicket;
+        }
+    }
+
+    // Cancel Ticket by ID
+    void cancelTicketByID(int id) {
+        if (!head) return;
+        Ticket* curr = head;
+        Ticket* prev = NULL;
+
+        // If head is the one
+        if (head->ticketID == id) {
+            if (head->next == head) { // only one node
+                delete head;
+                head = NULL;
+                return;
+            }
+            Ticket* last = head;
+            while (last->next != head) last = last->next;
+            last->next = head->next;
+            Ticket* del = head;
+            head = head->next;
+            delete del;
+            return;
+        }
+
+        // Search in list
+        do {
+            prev = curr;
+            curr = curr->next;
+            if (curr->ticketID == id) {
+                prev->next = curr->next;
+                delete curr;
+                return;
+            }
+        } while (curr != head);
+    }
+
+    // Cancel First Ticket
+    void cancelFirstTicket() {
+        if (!head) return;
+        cancelTicketByID(head->ticketID);
+    }
+
+    // Search Ticket by ID
+    void searchTicket(int id) {
+        if (!head) {
+            cout << "No tickets booked." << endl;
+            return;
+        }
+        Ticket* temp = head;
+        do {
+            if (temp->ticketID == id) {
+                cout << "Ticket Found -> ID: " << temp->ticketID 
+                     << ", Name: " << temp->customerName 
+                     << ", Ride: " << temp->rideName << endl;
+                return;
+            }
+            temp = temp->next;
+        } while (temp != head);
+        cout << "Ticket ID " << id << " not found." << endl;
+    }
+
+    // Display All Tickets (Circular Order)
+    void displayTickets() {
+        if (!head) {
+            cout << "No tickets booked." << endl;
+            return;
+        }
+        Ticket* temp = head;
+        cout << "Tickets in Circular Order:" << endl;
+        do {
+            cout << "ID: " << temp->ticketID 
+                 << ", Name: " << temp->customerName 
+                 << ", Ride: " << temp->rideName << endl;
+            temp = temp->next;
+        } while (temp != head);
+    }
+
+    // Count Total Tickets
+    void countTickets() {
+        if (!head) {
+            cout << "Total Tickets: 0" << endl;
+            return;
+        }
+        int count = 0;
+        Ticket* temp = head;
+        do {
+            count++;
+            temp = temp->next;
+        } while (temp != head);
+        cout << "Total Tickets: " << count << endl;
+    }
+
+    // Find Next Ticket After a Given Ticket ID
+    void nextTicketAfterID(int id) {
+        if (!head) {
+            cout << "No tickets booked." << endl;
+            return;
+        }
+        Ticket* temp = head;
+        do {
+            if (temp->ticketID == id) {
+                cout << "Next Ticket -> ID: " << temp->next->ticketID 
+                     << ", Name: " << temp->next->customerName 
+                     << ", Ride: " << temp->next->rideName << endl;
+                return;
+            }
+            temp = temp->next;
+        } while (temp != head);
+        cout << "Ticket ID " << id << " not found." << endl;
+    }
+};
+
+// Driver code
+int main() {
+    CircularLinkedList booking;
+
+    booking.issueTicketEnd(1, "Ali", "Roller Coaster");
+    booking.issueTicketEnd(2, "Sara", "Ferris Wheel");
+    booking.issueTicketEnd(3, "Ahmed", "Bumper Cars");
+    booking.issuePriorityTicket(0, "VIP-Zara", "Haunted House");
+
+    booking.displayTickets();
+    booking.countTickets();
+
+    booking.searchTicket(2);
+    booking.nextTicketAfterID(2);
+
+    booking.cancelTicketByID(3);
+    booking.cancelFirstTicket();
+
+    booking.displayTickets();
+    booking.countTickets();
+
+    return 0;
+}
