@@ -1,0 +1,124 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    string item;
+    int price;
+    Node* next;
+
+    Node(string i, int p) {
+        item = i;
+        price = p;
+        next = NULL;
+    }
+};
+
+class ShoppingCart {
+public:
+    Node* head;
+
+    ShoppingCart() {
+        head = NULL;
+    }
+
+    // Add item to tail
+    void addToTail(string name, int price) {
+        Node* newNode = new Node(name, price);
+        if (head == NULL) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+
+    // Delete item from front
+    void deleteFromFront() {
+        if (head == NULL) {
+            cout << "Cart is empty, nothing to delete!" << endl;
+            return;
+        }
+        Node* temp = head;
+        head = head->next;
+        cout << "Deleted: " << temp->item << " - $" << temp->price << endl;
+        delete temp;
+    }
+
+    // Search by item name
+    void searchByName(string name) {
+        Node* temp = head;
+        while (temp != NULL) {
+            if (temp->item == name) {
+                cout << "Found: " << temp->item << " - $" << temp->price << endl;
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << name << " not found in cart!" << endl;
+    }
+
+    // Search by position
+    void searchByPosition(int pos) {
+        if (pos <= 0) {
+            cout << "Invalid position!" << endl;
+            return;
+        }
+        Node* temp = head;
+        int count = 1;
+        while (temp != NULL && count < pos) {
+            temp = temp->next;
+            count++;
+        }
+        if (temp == NULL) {
+            cout << "Position " << pos << " is out of range!" << endl;
+        } else {
+            cout << "At position " << pos << ": " << temp->item << " - $" << temp->price << endl;
+        }
+    }
+
+    // Display entire cart
+    void display() {
+        if (head == NULL) {
+            cout << "Cart is empty!" << endl;
+            return;
+        }
+        Node* temp = head;
+        cout << "\nShopping Cart Items:\n";
+        while (temp != NULL) {
+            cout << temp->item << " - $" << temp->price << endl;
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    ShoppingCart cart;
+
+    // Add initial items
+    cart.addToTail("Laptop", 1000);
+    cart.addToTail("Phone", 700);
+    cart.addToTail("Tablet", 400);
+    cart.addToTail("Headphones", 150);
+
+    cart.display();
+
+    // Operations
+    cart.addToTail("Smartwatch", 200);
+    cart.display();
+
+    cart.deleteFromFront();
+    cart.display();
+
+    cart.searchByName("Tablet");
+    cart.searchByName("Monitor");
+
+    cart.searchByPosition(2);
+    cart.searchByPosition(10);
+
+    return 0;
+}
