@@ -1,0 +1,142 @@
+#include <iostream>
+using namespace std;
+
+bool safe (int ** board , int x , int y ,int n , int ** solArr) {
+    if (x>= 0 && y>=0 && x<n && y<n && board[x][y] ==1 && solArr[x][y] ==0) {
+        return true;
+    }
+    return false;
+}
+
+void maze (int ** board , int  x, int y , int n , int ** solArr) {
+    if (x== 2 && y== 2) {
+        solArr[x][y] =1;
+        for (int i=0;i<n;i++) {
+            for (int j=0;j<n;j++) {
+                cout<< solArr[i][j] << " " ;
+            }
+            cout<<endl;
+        }
+            solArr[x][y] =0;
+            return;
+    }
+
+    if (safe(board , x , y, n , solArr)) {
+        solArr[x][y] =1;
+         (maze(board , x+1 , y ,n ,solArr)) ;
+         (maze(board , x , y+1 ,n ,solArr)) ;
+         (maze(board , x-1 , y ,n ,solArr)) ;
+         (maze(board , x , y-1 ,n ,solArr)) ;
+
+            solArr [x][y]=0;
+        
+        }
+    }
+  
+
+
+    void mazeCat (int ** board , int  x, int y , int n , int ** solArrCat) {
+    if (x== 2 && y== 2) {
+        solArrCat[x][y] =1;
+       for (int i=0;i<n;i++) {
+            for (int j=0;j<n;j++) {
+                cout<< solArrCat[i][j] << " " ;
+            }
+            cout<<endl;
+        }
+           solArrCat[x][y] =0;
+            return;
+    }
+
+    if (safe(board , x , y, n , solArrCat)) {
+        solArrCat[x][y] =1;
+         (mazeCat(board , x-1 , y ,n ,solArrCat));
+         (mazeCat(board , x , y-1 ,n ,solArrCat));
+         (mazeCat(board , x+1 , y ,n ,solArrCat));
+         (mazeCat(board , x , y+1 ,n ,solArrCat));
+
+            solArrCat [x][y]=0;
+        
+        }
+    }
+
+   
+int main () {
+    int n=5;
+    int ** board = new int*[n];
+    for (int i=0;i<5;i++)  {
+        board[i] =  new int[n];
+    }
+
+    int temp [5][5] = {
+        1 , 1, 1 ,0 , 1,
+        0 , 1 , 0 , 1 , 1 ,
+        1 , 1 ,  1 , 1 , 0 , 
+        0 , 1, 0 , 1 , 1,
+        1 , 1 , 1 , 0 ,1
+    };
+
+
+    for (int i=0;i<n;i++) {
+        for (int j=0;j<n;j++) {
+            board[i][j] = temp[i][j];
+        }
+
+    }
+
+    int **solArr = new int *[n];
+    int** solArrCat = new int *[n];
+    for (int i=0;i<n;i++) {
+        solArr[i] =  new int[n];
+        solArrCat[i] = new int[n];
+        for (int j=0;j<n;j++) {
+            solArr[i][j] = 0;
+            solArrCat[i][j] =0;
+        }
+    }
+
+    cout<<"escape maze for rabbit"<<endl;
+    maze(board , 0 , 0 , n , solArr);
+
+    // if (maze(board , 0 , 0 , n , solArr)) {
+    //     for (int i=0;i<n;i++) {
+    //         for (int j=0;j<n;j++) {
+    //             cout<< solArr[i][j] << " " ;
+    //         }
+    //         cout<<endl;
+    //     }
+    // }
+
+cout<<"escape maze for cat"<<endl;
+mazeCat(board , 4 , 4 , n , solArrCat);
+
+    //    if (mazeCat(board , n-1 , n-1 , n , solArrCat)) {
+    //     for (int i=0;i<n;i++) {
+    //         for (int j=0;j<n;j++) {
+    //             cout<< solArrCat[i][j] << " " ;
+    //         }
+    //         cout<<endl;
+    //     }
+    // }
+
+
+    cout<<"intersection" <<endl;
+
+    for (int i =0;i<n;i++) {
+        for (int j=0;j<n;j++) {
+            if (solArr[i][j] == 1 && solArrCat[i][j] ==1) {
+                cout<< "intersection at " << i << " , " << j << endl;
+            }
+        }
+    }
+
+
+    for (int i=0;i<n;i++) {
+            delete[] board[i];
+            delete[] solArr[i];
+        }
+    
+     delete[] board;
+     delete[] solArr;
+
+}
