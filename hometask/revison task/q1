@@ -1,0 +1,81 @@
+#include<iostream>
+using namespace std;
+void selectionSort (int arr[] , int n) {
+    for(int i=0;i<n;i++) {
+        int leastindex = i;
+
+        for (int j=i+1;j<n;j++) {
+            if (arr[j] <arr[leastindex] ) {
+                leastindex = j;
+            }
+        }
+        swap (arr[i] , arr[leastindex]);
+    }
+}
+void InsertionSort (int arr[] , int n) {
+    for (int i=1;i<n;i++) {
+        int current = arr[i];
+        int j = i-1;
+        while (j>=0 && arr[j] >current) {
+            arr[j+1] = arr[j];
+            j--;
+        }
+        arr[j+1] = current; 
+    }
+}
+
+void bubblesort (int arr[] ,int n) {
+    for (int i=0;i<n;i++) {
+        for (int j=0;j<n-i-1;j++) {
+            if (arr[j] >arr[j+1] ) {
+                int temp =  arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}
+int nextGap (int n) {
+    int gap =  gap*10/13;
+    if (gap <1) {
+        return 1;
+    }
+    return gap;
+}
+void  combsort (int arr[] ,int n) {
+    int gap = n;
+    bool swapped = true;
+
+    while (gap!= 1 || swapped == true) {
+        gap = nextGap(gap);
+
+        swapped = false;
+    
+
+    for (int j=0;j<n-gap;j++) {
+       if ( arr[j] > arr[j+gap]) {
+        swap (arr[j] , arr[j+gap]);
+        swapped = true;
+    }
+}
+}
+
+}
+
+void displayArray (int arr[] , int n) {
+for (int i=0;i<n;i++) {
+    cout<<arr[i]<<" ";
+}
+}
+
+int main () {
+int arr[6] = {205 , 102 , 310 , 450 ,234,120};
+cout<<"after insertion sort"<<endl;
+InsertionSort(arr , 6);
+//bubblesort(arr , 6);
+
+// combsort(arr , 6);
+displayArray(arr , 6);
+
+    return 0;
+}
