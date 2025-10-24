@@ -2,98 +2,65 @@
 #include <string>
 using namespace std;
 
-struct Runner {
+struct Product {
     string name;
-    int time;
+    int price;
+    string description;
+    string availability;
 };
 
-void merge(Runner arr[], int left, int mid, int right) {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
+int partition(Product arr[], int low, int high) {
+    int pivot = arr[high].price;
+    int i = low - 1;
 
-    Runner* L = new Runner[n1];
-    Runner* R = new Runner[n2];
-
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
-
-    int i = 0, j = 0, k = left;
-
-    while (i < n1 && j < n2) {
-        if (L[i].time <= R[j].time) {
-            arr[k] = L[i];
+    for (int j = low; j < high; j++) {
+        if (arr[j].price < pivot) {
             i++;
-        } else {
-            arr[k] = R[j];
-            j++;
+            Product temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
         }
-        k++;
     }
 
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
+    Product temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
 
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-
-    delete[] L;
-    delete[] R;
+    return i + 1;
 }
 
-void mergeSort(Runner arr[], int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left) / 2;
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-        merge(arr, left, mid, right);
+void quickSort(Product arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
     }
-}
-
-void displayTop5(Runner arr[], int n) {
-    cout << "\nTop 5 Fastest Runners:\n";
-    cout << "-----------------------------\n";
-    cout << "Rank\tName\tTime\n";
-    cout << "-----------------------------\n";
-
-    for (int i = 0; i < 5 && i < n; i++)
-        cout << i + 1 << "\t" << arr[i].name << "\t" << arr[i].time << endl;
 }
 
 int main() {
-    Runner runners[10] = {
-        {"Ali", 320},
-        {"Sara", 295},
-        {"Bilal", 310},
-        {"Zara", 280},
-        {"Usman", 360},
-        {"Fatima", 270},
-        {"Omar", 330},
-        {"Hina", 300},
-        {"Danish", 290},
-        {"Ayesha", 305}
-    };
+    Product p[3];
 
-    int n = 10;
+    cout << "Enter details of 3 products:\n";
+    for (int i = 0; i < 3; i++) {
+        cout << "\nProduct " << i + 1 << " name: ";
+        cin >> p[i].name;
+        cout << "Price: ";
+        cin >> p[i].price;
+        cout << "Description: ";
+        cin >> p[i].description;
+        cout << "Availability (in stock / out of stock): ";
+        cin >> p[i].availability;
+    }
 
-    cout << "Before Sorting:\n";
-    for (int i = 0; i < n; i++)
-        cout << runners[i].name << "\t" << runners[i].time << endl;
+    quickSort(p, 0, 2);
 
-    mergeSort(runners, 0, n - 1);
+    cout << "\nSorted Product List (By Price - Ascending):\n";
+    cout << "-------------------------------------------------\n";
+    cout << "Name\tPrice\tAvailability\tDescription\n";
 
-    cout << "\nAfter Sorting:\n";
-    for (int i = 0; i < n; i++)
-        cout << runners[i].name << "\t" << runners[i].time << endl;
-
-    displayTop5(runners, n);
+    for (int i = 0; i < 3; i++) {
+        cout << p[i].name << "\t" << p[i].price << "\t" << p[i].availability << "\t\t" << p[i].description << endl;
+    }
 
     return 0;
 }
