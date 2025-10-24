@@ -1,0 +1,92 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Define a constant for the number of runners
+#define NUM_RUNNERS 10
+
+// Define a structure to store runner details
+struct Runner {
+    string name;
+    int time;
+};
+
+// Function to merge two halves of the array
+void merge(Runner runners[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    
+    // Dynamically allocate memory for temporary arrays
+    Runner* leftArr = new Runner[n1];
+    Runner* rightArr = new Runner[n2];
+    
+    // Copy data to temporary arrays
+    for (int i = 0; i < n1; ++i)
+        leftArr[i] = runners[left + i];
+    for (int j = 0; j < n2; ++j)
+        rightArr[j] = runners[mid + 1 + j];
+    
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (leftArr[i].time <= rightArr[j].time) {
+            runners[k] = leftArr[i];
+            ++i;
+        } else {
+            runners[k] = rightArr[j];
+            ++j;
+        }
+        ++k;
+    }
+    
+    // Copy remaining elements from leftArr
+    while (i < n1) {
+        runners[k] = leftArr[i];
+        ++i;
+        ++k;
+    }
+    
+    // Copy remaining elements from rightArr
+    while (j < n2) {
+        runners[k] = rightArr[j];
+        ++j;
+        ++k;
+    }
+
+    // Free dynamically allocated memory
+    delete[] leftArr;
+    delete[] rightArr;
+}
+
+// Function to implement Merge Sort
+void mergeSort(Runner runners[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergeSort(runners, left, mid);
+        mergeSort(runners, mid + 1, right);
+        merge(runners, left, mid, right);
+    }
+}
+
+int main() {
+    Runner runners[NUM_RUNNERS];
+    
+    // Input 10 participants
+    for (int i = 0; i < NUM_RUNNERS; ++i) {
+        cout << "Enter name of Runner " << i + 1 << ": ";
+        cin >> runners[i].name;
+        cout << "Enter finish time (in seconds) for " << runners[i].name << ": ";
+        cin >> runners[i].time;
+    }
+    
+    // Sort the runners using Merge Sort
+    mergeSort(runners, 0, NUM_RUNNERS - 1);
+    
+    // Display the top 5 fastest runners
+    cout << "\nTop 5 Fastest Runners:\n";
+    cout << "Rank\tName\tTime (seconds)\n";
+    for (int i = 0; i < 5; ++i) {
+        cout << i + 1 << "\t" << runners[i].name << "\t" << runners[i].time << endl;
+    }
+
+    return 0;
+}
