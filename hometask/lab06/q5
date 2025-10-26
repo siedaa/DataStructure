@@ -1,0 +1,50 @@
+#include <iostream>
+#include <stack>
+#include <cmath>     // for pow()
+using namespace std;
+
+// Function to check if the character is an operator
+bool isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^');
+}
+
+// Function to evaluate prefix expression
+int evaluatePrefix(string prefix) {
+    stack<int> st;
+
+    // Traverse from right to left
+    for (int i = prefix.length() - 1; i >= 0; i--) {
+        char c = prefix[i];
+
+        // If operand, push to stack
+        if (isdigit(c)) {
+            st.push(c - '0'); // convert char to int
+        }
+        // If operator, pop two operands and apply operation
+        else if (isOperator(c)) {
+            int op1 = st.pop(); // first operand
+            int op2 = st.pop(); // second operand
+
+            switch (c) {
+                case '+': st.push(op1 + op2); break;
+                case '-': st.push(op1 - op2); break;
+                case '*': st.push(op1 * op2); break;
+                case '/': st.push(op1 / op2); break;
+                case '^': st.push(pow(op1, op2)); break;
+            }
+        }
+    }
+    return st.top(); // final answer
+}
+
+int main() {
+    string prefix;
+
+    cout << "Enter Prefix Expression: ";
+    cin >> prefix;
+
+    int result = evaluatePrefix(prefix);
+    cout << "Result = " << result << endl;
+
+    return 0;
+}
