@@ -1,0 +1,17 @@
+To store and process restaurant orders in the same sequence they are received, I would use a Queue data structure. A queue works on the FIFO (First In, First Out) principle, meaning the first order placed by a customer will be the first order processed, which matches how restaurants operate.
+
+The following operations will be required to manage the order system:
+
+Enqueue (Add Order) – This operation will allow adding a new customer order to the end of the queue. The order will include the item name and its quantity.
+
+Dequeue (Remove Order) – This operation removes the order from the front of the queue once it has been prepared and served.
+
+Front/Peek – This allows the restaurant to check the order currently at the front of the queue, so the kitchen knows which order to prepare next.
+
+isEmpty() – This function checks whether the queue has no orders to avoid underflow (removing when no orders exist).
+
+isFull() (if using array implementation) – This function checks if the queue is full to prevent overflow (adding when the queue is full). If a linked list implementation is used, this problem won't occur, as memory grows dynamically.
+
+To avoid overflow, I would use a linked list implementation of the queue, where memory grows as needed. To prevent underflow, I would always check isEmpty() before performing a dequeue operation.
+
+Finally, to print all processed orders in the order they were received, I would dequeue each order one by one and display the item name and quantity. This ensures that the kitchen staff can see all completed orders in the correct sequence of processing.
