@@ -1,0 +1,72 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+// Node structure for Linked List
+struct Node {
+    string url;
+    Node* next;
+    Node(string u) : url(u), next(NULL) {}
+};
+
+// Insert at beginning (most recent page visited)
+void visitPage(Node*& head, stack<string>& history, string url) {
+    Node* newNode = new Node(url);
+    newNode->next = head;
+    head = newNode;
+    history.push(url);
+}
+
+// Function to go back k times
+void goBack(Node*& head, stack<string>& history, int k) {
+    for(int i = 0; i < k; i++) {
+        if (!history.empty()) {
+            history.pop();   // Remove last visited page from stack
+        }
+        if (head != NULL) {
+            Node* temp = head;
+            head = head->next;  // Remove from Linked List
+            delete temp;
+        }
+    }
+
+    if (!history.empty()) {
+        cout << "Current Page: " << history.top() << endl;
+    } else {
+        cout << "No browsing history left!" << endl;
+    }
+}
+
+// Display Linked List (for checking)
+void display(Node* head) {
+    cout << "Browsing History (Most recent first): ";
+    while(head != NULL) {
+        cout << head->url;
+        if (head->next != NULL) cout << " -> ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    Node* head = NULL;
+    stack<string> history;
+
+    // Visiting 5 websites
+    visitPage(head, history, "Google");
+    visitPage(head, history, "Facebook");
+    visitPage(head, history, "Twitter");
+    visitPage(head, history, "LinkedIn");
+    visitPage(head, history, "Instagram");
+
+    cout << "Before Back Button:\n";
+    display(head);
+
+    // Click Back button twice
+    goBack(head, history, 2);
+
+    cout << "\nAfter Going Back Twice:\n";
+    display(head);
+
+    return 0;
+}
