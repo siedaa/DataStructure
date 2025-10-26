@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Call {
+    string name;
+    string number;
+    int duration;
+    Call* next;
+};
+
+class CallStack {
+private:
+    Call* topCall;
+
+public:
+    CallStack() {
+        topCall = NULL;
+    }
+
+    // push() → Add new call record
+    void push(string name, string number, int duration) {
+        Call* newCall = new Call{name, number, duration, NULL};
+        newCall->next = topCall;
+        topCall = newCall;
+        cout << "Call Added Successfully!\n";
+        display();
+    }
+
+    // pop() → Delete most recent call
+    void pop() {
+        if (empty()) {
+            cout << "No call history to remove.\n";
+            return;
+        }
+        Call* temp = topCall;
+        topCall = topCall->next;
+        cout << "Deleted Call: " << temp->name << endl;
+        delete temp;
+        display();
+    }
+
+    // top() → Show the most recent call
+    void top() {
+        if (empty()) {
+            cout << "Call history is empty.\n";
+            return;
+        }
+        cout << "\nMost Recent Call:\n";
+        cout << "Name: " << topCall->name 
+             << ", Number: " << topCall->number 
+             << ", Duration: " << topCall->duration << " mins\n\n";
+    }
+
+    // empty() → Check if stack is empty
+    bool empty() {
+        return topCall == NULL;
+    }
+
+    // Display the entire call log
+    void display() {
+        if (empty()) {
+            cout << "Call History is Empty.\n\n";
+            return;
+        }
+        cout << "\nCurrent Call History (Latest on Top):\n";
+        Call* temp = topCall;
+        while (temp != NULL) {
+            cout << temp->name << " - " << temp->number 
+                 << " (" << temp->duration << " mins)\n";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    CallStack callHistory;
+
+    callHistory.push("Aisha", "0300-1234567", 5);
+    callHistory.push("Ali", "0321-9876543", 2);
+    callHistory.push("Sara", "0345-7654321", 3);
+
+    callHistory.top();     // Show most recent call
+
+    callHistory.pop();     // Remove last call
+    callHistory.pop();     // Remove another call
+
+    callHistory.top();     // Show most recent call
+
+    callHistory.pop();     // Remove last
+    callHistory.pop();     // Try removing when empty
+
+    return 0;
+}
