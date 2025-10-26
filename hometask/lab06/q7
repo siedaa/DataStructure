@@ -1,0 +1,100 @@
+#include <iostream>
+using namespace std;
+
+#define MAX 10   // Maximum number of patrons that can wait in the queue
+
+class Queue {
+private:
+    string arr[MAX];  // Stores patron names
+    int front, rear;
+
+public:
+    Queue() {
+        front = -1;
+        rear = -1;
+    }
+
+    // Add patron to queue
+    void enqueue(string name) {
+        if (rear == MAX - 1) {
+            cout << "Queue is Full! No more patrons can wait.\n";
+            return;
+        }
+        if (front == -1) {
+            front = 0;
+        }
+        arr[++rear] = name;
+        cout << name << " has joined the queue.\n";
+    }
+
+    // Remove patron after transaction is completed
+    void dequeue() {
+        if (front == -1 || front > rear) {
+            cout << "Queue is Empty! No patrons to serve.\n";
+            return;
+        }
+
+        cout << arr[front] << "'s book transaction is completed and they left the queue.\n";
+        front++;
+
+        if (front > rear) {  
+            front = rear = -1; // Reset queue if empty
+        }
+    }
+
+    // Display current queue
+    void display() {
+        if (front == -1) {
+            cout << "No patrons are waiting in the queue.\n";
+            return;
+        }
+
+        cout << "\nCurrent Queue of Patrons:\n";
+        for (int i = front; i <= rear; i++) {
+            cout << arr[i] << " <- ";
+        }
+        cout << "\n";
+    }
+};
+
+int main() {
+    Queue q;
+    int choice;
+    string name;
+
+    do {
+        cout << "\n--- Library Queue Menu ---\n";
+        cout << "1. Add Patron to Queue\n";
+        cout << "2. Complete Transaction (Remove Patron)\n";
+        cout << "3. Display Current Queue\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cout << "Enter Patron Name: ";
+            cin >> name;
+            q.enqueue(name);
+            break;
+
+        case 2:
+            q.dequeue();
+            break;
+
+        case 3:
+            q.display();
+            break;
+
+        case 4:
+            cout << "Exiting program...\n";
+            break;
+
+        default:
+            cout << "Invalid choice! Try again.\n";
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
