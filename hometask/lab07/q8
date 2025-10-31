@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Order {
+    int orderID;
+    string customerName;
+    float totalPrice;
+};
+
+void swapValues(Order &a, Order &b) {
+    Order temp = a;
+    a = b;
+    b = temp;
+}
+
+int partition(Order arr[], int low, int high) {
+    float pivot = arr[high].totalPrice; 
+    int i = low - 1;
+
+    for(int j = low; j < high; j++) {
+        if(arr[j].totalPrice < pivot) {
+            i++;
+            swapValues(arr[i], arr[j]);
+        }
+    }
+    swapValues(arr[i + 1], arr[high]);
+    return i + 1;
+}
+
+void quickSort(Order arr[], int low, int high) {
+    if(low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+int main() {
+    Order orders[] = {
+        {101, "Ali", 5500},
+        {102, "Maha", 2000},
+        {103, "Ahmed", 9200},
+        {104, "Sara", 3000},
+        {105, "Zain", 7000},
+        {106, "Fatima", 1500}
+    };
+
+    int size = sizeof(orders) / sizeof(orders[0]);
+
+    quickSort(orders, 0, size - 1);
+
+    cout << "Sorted Orders by Total Price (Ascending):\n";
+    cout << "OrderID\tCustomer\tTotal Price\n";
+    cout << "---------------------------------\n";
+
+    for(int i = 0; i < size; i++) {
+        cout << orders[i].orderID << "\t" << orders[i].customerName 
+             << "\t\t" << orders[i].totalPrice << endl;
+    }
+
+    return 0;
+}
