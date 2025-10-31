@@ -1,0 +1,167 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+using namespace std;
+
+int cFirst = 0, cRandom = 0, cMiddle = 0, cMedian = 0;
+
+// Swap Function
+void swap(int &a, int &b) {
+    int t = a;
+    a = b;
+    b = t;
+}
+
+// Partition - First Element Pivot
+int partitionFirst(int arr[], int low, int high) {
+    int pivot = arr[low];
+    int i = low + 1;
+
+    for (int j = low + 1; j <= high; j++) {
+        cFirst++;
+        if (arr[j] < pivot) {
+            swap(arr[j], arr[i]);
+            i++;
+        }
+    }
+    swap(arr[low], arr[i-1]);
+    return i-1;
+}
+
+// Partition - Random Element Pivot
+int partitionRandom(int arr[], int low, int high) {
+    int randomIndex = low + rand() % (high - low + 1);
+    swap(arr[low], arr[randomIndex]);
+
+    int pivot = arr[low];
+    int i = low + 1;
+
+    for (int j = low + 1; j <= high; j++) {
+        cRandom++;
+        if (arr[j] < pivot) {
+            swap(arr[j], arr[i]);
+            i++;
+        }
+    }
+    swap(arr[low], arr[i-1]);
+    return i-1;
+}
+
+// Partition - Middle Element Pivot
+int partitionMiddle(int arr[], int low, int high) {
+    int mid = (low + high) / 2;
+    swap(arr[low], arr[mid]);
+
+    int pivot = arr[low];
+    int i = low + 1;
+
+    for (int j = low + 1; j <= high; j++) {
+        cMiddle++;
+        if (arr[j] < pivot) {
+            swap(arr[j], arr[i]);
+            i++;
+        }
+    }
+    swap(arr[low], arr[i-1]);
+    return i-1;
+}
+
+// Partition - Median of 3 Pivot
+int medianOfThree(int arr[], int low, int high) {
+    int mid = (low + high) / 2;
+
+    if (arr[low] > arr[mid]) swap(arr[low], arr[mid]);
+    if (arr[mid] > arr[high]) swap(arr[mid], arr[high]);
+    if (arr[low] > arr[mid]) swap(arr[low], arr[mid]);
+
+    return mid;
+}
+
+int partitionMedian(int arr[], int low, int high) {
+    int median = medianOfThree(arr, low, high);
+    swap(arr[low], arr[median]);
+
+    int pivot = arr[low];
+    int i = low + 1;
+
+    for (int j = low + 1; j <= high; j++) {
+        cMedian++;
+        if (arr[j] < pivot) {
+            swap(arr[j], arr[i]);
+            i++;
+        }
+    }
+    swap(arr[low], arr[i-1]);
+    return i-1;
+}
+
+// QuickSort functions
+void quickSortFirst(int arr[], int low, int high) {
+    if (low < high) {
+        int p = partitionFirst(arr, low, high);
+        quickSortFirst(arr, low, p - 1);
+        quickSortFirst(arr, p + 1, high);
+    }
+}
+
+void quickSortRandom(int arr[], int low, int high) {
+    if (low < high) {
+        int p = partitionRandom(arr, low, high);
+        quickSortRandom(arr, low, p - 1);
+        quickSortRandom(arr, p + 1, high);
+    }
+}
+
+void quickSortMiddle(int arr[], int low, int high) {
+    if (low < high) {
+        int p = partitionMiddle(arr, low, high);
+        quickSortMiddle(arr, low, p - 1);
+        quickSortMiddle(arr, p + 1, high);
+    }
+}
+
+void quickSortMedian(int arr[], int low, int high) {
+    if (low < high) {
+        int p = partitionMedian(arr, low, high);
+        quickSortMedian(arr, low, p - 1);
+        quickSortMedian(arr, p + 1, high);
+    }
+}
+
+// Display array
+void display(int arr[], int n) {
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+}
+
+int main() {
+    srand(time(0));
+
+    int arr[] = {10, 7, 8, 9, 1, 5, 3};
+    int n = sizeof(arr)/sizeof(arr[0]);
+
+    int a1[20], a2[20], a3[20], a4[20];
+    for(int i=0;i<n;i++) {
+        a1[i]=arr[i];
+        a2[i]=arr[i];
+        a3[i]=arr[i];
+        a4[i]=arr[i];
+    }
+
+    quickSortFirst(a1, 0, n-1);
+    quickSortRandom(a2, 0, n-1);
+    quickSortMiddle(a3, 0, n-1);
+    quickSortMedian(a4, 0, n-1);
+
+    cout << "Sorted Array: ";
+    display(a1, n);
+
+    cout << "\nComparisons Count:" << endl;
+    cout << "First Element Pivot:      " << cFirst << endl;
+    cout << "Random Pivot:             " << cRandom << endl;
+    cout << "Middle Element Pivot:     " << cMiddle << endl;
+    cout << "Median of Three Pivot:    " << cMedian << endl;
+
+    return 0;
+}
