@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+
+void printArray(int arr[], int n) {
+    for(int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+}
+
+// Get max value
+int getMax(int arr[], int n) {
+    int mx = arr[0];
+    for(int i = 1; i < n; i++)
+        if(arr[i] > mx)
+            mx = arr[i];
+    return mx;
+}
+
+// Counting sort for each digit (Stable)
+void countingSort(int arr[], int n, int exp) {
+    int output[n];
+    int count[10] = {0};
+
+    for(int i = 0; i < n; i++)
+        count[(arr[i] / exp) % 10]++;
+
+    for(int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    for(int i = n - 1; i >= 0; i--) {
+        int digit = (arr[i] / exp) % 10;
+        output[count[digit] - 1] = arr[i];
+        count[digit]--;
+    }
+
+    for(int i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+
+// Radix Sort with step-by-step display
+void radixSort(int arr[], int n) {
+    int maxVal = getMax(arr, n);
+    int pass = 1;
+
+    for(int exp = 1; maxVal / exp > 0; exp *= 10) {
+        countingSort(arr, n, exp);
+        cout << "\nAfter Pass " << pass++ << " (exp = " << exp << "): ";
+        printArray(arr, n);
+    }
+}
+
+int main() {
+    int productIDs[20] = {
+        45231, 12345, 98765, 23456, 87654,
+        34567, 56789, 67890, 11111, 22222,
+        99999, 88888, 76543, 65432, 54321,
+        10101, 20202, 30303, 40404, 50505
+    };
+
+    int n = 20;
+
+    cout << "Original Product IDs:\n";
+    printArray(productIDs, n);
+
+    radixSort(productIDs, n);
+
+    cout << "\nFinal Sorted Product IDs (Ascending):\n";
+    printArray(productIDs, n);
+
+    return 0;
+}
