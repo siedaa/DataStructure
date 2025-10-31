@@ -1,0 +1,99 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+// Insert node at end
+void insert(Node*& head, int value) {
+    Node* newNode = new Node{value, NULL};
+
+    if (!head) {
+        head = newNode;
+        return;
+    }
+
+    Node* temp = head;
+    while (temp->next)
+        temp = temp->next;
+    temp->next = newNode;
+}
+
+// Print Linked List
+void display(Node* head) {
+    while (head) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+// Swap data of two nodes
+void swapData(Node* a, Node* b) {
+    int temp = a->data;
+    a->data = b->data;
+    b->data = temp;
+}
+
+// Partition function (Lomuto partition for linked list)
+Node* partition(Node* low, Node* high) {
+    int pivot = high->data;
+    Node* i = low;  
+    Node* j = low;
+
+    while (j != high) {
+        if (j->data < pivot) {
+            swapData(i, j);
+            i = i->next;
+        }
+        j = j->next;
+    }
+    swapData(i, high);
+    return i;
+}
+
+// Recursive QuickSort
+void quickSort(Node* low, Node* high) {
+    if (!low || low == high)
+        return;
+
+    Node* pivot = partition(low, high);
+
+    if (pivot != low)
+        quickSort(low, pivot);
+
+    if (pivot->next != high)
+        quickSort(pivot->next, high);
+}
+
+// Get last node
+Node* getLast(Node* head) {
+    while (head && head->next)
+        head = head->next;
+    return head;
+}
+
+// Main Program
+int main() {
+    Node* head = NULL;
+
+    // Given values: {10, 7, 8, 9, 1, 5, 3}
+    int values[] = {10, 7, 8, 9, 1, 5, 3};
+    int n = sizeof(values) / sizeof(values[0]);
+
+    for (int i = 0; i < n; i++)
+        insert(head, values[i]);
+
+    cout << "Original List: ";
+    display(head);
+
+    Node* last = getLast(head);
+    quickSort(head, last);
+
+    cout << "Sorted List: ";
+    display(head);
+
+    return 0;
+}
