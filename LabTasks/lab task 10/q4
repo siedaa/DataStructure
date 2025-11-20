@@ -1,0 +1,95 @@
+#include<iostream>
+using namespace std;
+
+class minHeap {
+    int *arr;
+    int size;
+    int total_size;
+
+public:
+    minHeap(int n) {
+        arr = new int[n];
+        size = 0;
+        total_size = n;
+    }
+
+    void insertion(int value) {
+        if (size == total_size) {
+            cout << "Heap is full\n";
+            return;
+        }
+
+        arr[size] = value;
+        int index = size;
+        size++;
+
+        // Bubble up (min-heap)
+        while (index > 0 && arr[(index - 1) / 2] > arr[index]) {
+            swap(arr[index], arr[(index - 1) / 2]);
+            index = (index - 1) / 2;
+        }
+    }
+
+    void heapify(int index) {
+        int smallest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        // Correct comparisons for MIN-HEAP
+        if (left < size && arr[left] < arr[smallest]) {
+            smallest = left;
+        }
+        if (right < size && arr[right] < arr[smallest]) {
+            smallest = right;
+        }
+
+        if (smallest != index) {
+            swap(arr[index], arr[smallest]);
+            heapify(smallest);
+        }
+    }
+
+    void removeMin() {
+        if (size == 0) {
+            cout << "Heap is empty\n";
+            return;
+        }
+
+        arr[0] = arr[size - 1];
+        size--;
+
+        if (size > 0)
+            heapify(0);
+    }
+
+    void print() {
+        for (int i = 0; i < size; i++)
+            cout << arr[i] << " ";
+        cout << endl;
+    }
+};
+
+int main() {
+    minHeap h(10);
+
+    // Step 1: Create heap
+    h.insertion(100);
+    h.insertion(50);
+    h.insertion(75);
+    h.insertion(60);
+
+    cout << "Initial heap: ";
+    h.print();
+
+    // Step 2: Insert 55
+    h.insertion(55);
+    cout << "After inserting 55: ";
+    h.print();
+
+    // Step 3: Remove minimum
+    h.removeMin();
+    cout << "After removing lowest price: ";
+    h.print();
+
+    return 0;
+}
