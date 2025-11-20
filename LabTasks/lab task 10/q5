@@ -1,0 +1,93 @@
+#include<iostream>
+using namespace std;
+
+class maxHeap {
+    int *arr;
+    int size;
+    int total_size;
+
+public:
+    maxHeap(int n) {
+        arr = new int[n];
+        size = 0;
+        total_size = n;
+    }
+
+    void insertion(int value) {
+        if (size == total_size) {
+            cout << "Heap is full" << endl;
+            return;
+        }
+
+        arr[size] = value;
+        int index = size;
+        size++;
+
+        // Bubble up
+        while (index > 0 && arr[(index - 1) / 2] < arr[index]) {
+            swap(arr[index], arr[(index - 1) / 2]);
+            index = (index - 1) / 2;
+        }
+    }
+
+    void heapify(int index) {
+        int largest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+
+        // Compare with left child
+        if (left < size && arr[left] > arr[largest]) {
+            largest = left;
+        }
+
+        // Compare with right child
+        if (right < size && arr[right] > arr[largest]) {
+            largest = right;
+        }
+
+        if (largest != index) {
+            swap(arr[index], arr[largest]);
+            heapify(largest);
+        }
+    }
+
+    void removeMax() {
+        if (size == 0) {
+            cout << "Heap is empty" << endl;
+            return;
+        }
+
+        arr[0] = arr[size - 1];
+        size--;
+
+        if (size > 0)
+            heapify(0);
+    }
+
+    void print() {
+        for (int i = 0; i < size; i++)
+            cout << arr[i] << " ";
+        cout << endl;
+    }
+};
+
+int main() {
+    maxHeap h(10);
+
+    // Step 1: Existing players
+    h.insertion(1500);
+    h.insertion(1200);
+    h.insertion(1800);
+    h.insertion(1600);
+    h.print();
+
+    // Step 2: New player joins
+    h.insertion(1700);
+    h.print();
+
+    // Step 3: Match highest-rated player
+    h.removeMax();
+    h.print();
+
+    return 0;
+}
