@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Node for linked list (chaining)
+class Node {
+public:
+    string word;
+    Node* next;
+
+    Node(string w) {
+        word = w;
+        next = NULL;
+    }
+};
+
+class Dictionary {
+private:
+    Node* table[100];  // Hash table with 100 buckets
+
+    // Hash Function: Sum ASCII values % 100
+    int hashFunction(string key) {
+        int sum = 0;
+        for(char c : key) {
+            sum += int(c);
+        }
+        return sum % 100;
+    }
+
+public:
+    Dictionary() {
+        for (int i = 0; i < 100; i++)
+            table[i] = NULL;
+    }
+
+    // (a) Add_Record
+    void Add_Record(string word) {
+        int index = hashFunction(word);
+        Node* newNode = new Node(word);
+
+        // Insert at head of linked list
+        newNode->next = table[index];
+        table[index] = newNode;
+
+        cout << "Added \"" << word << "\" at bucket " << index << endl;
+    }
+
+    // (b) Word_Search
+    void Word_Search(string key) {
+        int index = hashFunction(key);
+        Node* temp = table[index];
+
+        while (temp) {
+            if (temp->word == key) {
+                cout << "Word \"" << key << "\" found at bucket " << index << endl;
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << "Error: Word \"" << key << "\" not found!" << endl;
